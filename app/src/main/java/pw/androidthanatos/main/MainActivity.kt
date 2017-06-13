@@ -11,12 +11,13 @@ import android.widget.Toast
 import pw.androidthanatos.ant.Ant
 import pw.androidthanatos.ant.antImg
 import pw.androidthanatos.ant.antJSON
+import pw.androidthanatos.ant.antString
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tv:TextView
 
-    private val path: String = "https://www.qigeairen.com/server_api/images/activity/lunbo_1.png"
+    private val path: String = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=149733435,2204929951&fm=26&gp=0.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         antImg {
-            url = "https://www.qigeairen.com/server_api/images/activity/lunbo_4.png"
+            url = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=8834577,1210015675&fm=26&gp=0.jpg"
+            //imageview
             target = iv1
             progress {
                 p -> pb1.text = if (p == -1) "100%" else "$p%"
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         val header = HashMap<String,String>()
         header.put("token","")
 
-        antJSON {
+        antString {
             url = "https://www.baidu.com"
             cache = false
             headers = header
@@ -69,8 +71,8 @@ class MainActivity : AppCompatActivity() {
                 t -> pro.text = "进度：${if(t == -1) 100 else t}"
             }
 
-           complateJson {
-               s -> tv.text= s.toString()
+           complateString {
+               s -> tv.text= s
            }
             error {
                 i -> log("错误码： $i")
