@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import pw.androidthanatos.ant.Ant
 import pw.androidthanatos.ant.antImg
 import pw.androidthanatos.ant.antJSON
-import pw.androidthanatos.ant.img.AntCacheType
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         header.put("token","")
 
         antJSON {
-            url = "https://www.qigeairen.com/api/v2.0/activity/0"
+            url = "https://www.baidu.com"
             cache = false
             headers = header
             progress {
