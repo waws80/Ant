@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tv:TextView
 
-    private val path: String = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=149733435,2204929951&fm=26&gp=0.jpg"
+    private val path: String = "https://www.qigeairen.com/server_api/images/activity/lunbo_4.png"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         antImg {
-            url = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=8834577,1210015675&fm=26&gp=0.jpg"
+            url = "https://www.qigeairen.com/server_api/images/activity/lunbo_1.png"
             //imageview
             target = iv1
             progress {

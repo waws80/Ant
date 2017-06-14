@@ -163,11 +163,8 @@ class HttpServiceImpl: HttpService {
                 return true
             }
 
-
         }
-
         return false
-
     }
 
 

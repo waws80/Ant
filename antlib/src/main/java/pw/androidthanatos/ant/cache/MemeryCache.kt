@@ -11,8 +11,10 @@ import pw.androidthanatos.ant.Ant
  class MemeryCache: ImageCache {
 
 
-
-    private val cacheSize= (Runtime.getRuntime().maxMemory()/8).toInt()
+    /**
+     * 取内存的四分之一作为缓存
+     */
+    private val cacheSize= (Runtime.getRuntime().maxMemory()/1024/4).toInt()
 
     private val mCache: LruCache<String, Bitmap> by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         object: LruCache<String, Bitmap>(cacheSize){
