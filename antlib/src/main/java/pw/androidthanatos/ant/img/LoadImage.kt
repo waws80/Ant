@@ -8,7 +8,7 @@ import android.support.annotation.IdRes
 import android.widget.ImageView
 import edu.t_imageloader.utils.BitmapUtils
 import pw.androidthanatos.ant.Ant
-import pw.androidthanatos.ant.HttpTask
+import pw.androidthanatos.ant.controller.HttpTask
 import pw.androidthanatos.ant.R
 import pw.androidthanatos.ant.cache.DoubleCache
 import pw.androidthanatos.ant.cache.MemeryCache
@@ -116,10 +116,15 @@ class LoadImage {
      * 获取网络图片
      */
     private fun getNetImg(url: String,target: ImageView,cacheType: AntCacheType){
-        val task =HttpTask()
+        val task = HttpTask()
         if (!url.startsWith("http") || !url.startsWith("https")) throw IllegalArgumentException("请求图片的url错误")
         task.addUrl(url)
         task.setContext(target.context)
+        task.addConvert(Ant.convert)
+        task.addSSLSocketFactory(Ant.sslSocketFactory)
+        if (Ant.interceptor != null){
+            task.addInterceptor(Ant.interceptor!!)
+        }
         val run = task.run(ByteArray::class.java,object: ResponseListener<ByteArray>(){
 
             override fun progress(progress: Int) {
@@ -143,13 +148,23 @@ class LoadImage {
                                 val m = MemeryCache()
                                 m.putCache(url,bitmap)
                                 val b = m.getCache(url)
-                                postBitmap(url,target,b!!)
+                                if (b == null){
+                                    postBitmap(url,target,bitmap)
+                                }else{
+                                    postBitmap(url,target,b)
+                                }
+
                             }
                             AntCacheType.DOUBLECACHE ->{
                                 val d = DoubleCache()
                                 d.putCache(url,bitmap)
                                 val b = d.getCache(url)
-                                postBitmap(url,target,b!!)
+                                if (b == null){
+                                    postBitmap(url,target,bitmap)
+                                }else{
+                                    postBitmap(url,target,b)
+                                }
+
                             }
                         }
 

@@ -12,5 +12,5 @@ interface AntInterceptor {
      * @param chain 请求信息实体
      * @return  true 执行此次操作 false 拦截此次操作
      */
-    fun interceptor(chain: Chain): Boolean
+    fun interceptor(chain: Chain): Chain
 }

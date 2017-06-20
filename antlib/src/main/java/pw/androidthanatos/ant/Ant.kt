@@ -3,11 +3,15 @@ package pw.androidthanatos.ant
 import android.content.Context
 import android.util.Log
 import android.widget.ImageView
+import okhttp3.OkHttpClient
 import org.json.JSONObject
 import pw.androidthanatos.ant.controller.AntInterceptor
 import pw.androidthanatos.ant.controller.AntMethod
+import pw.androidthanatos.ant.controller.HttpTask
 import pw.androidthanatos.ant.controller.ResponseListener
 import pw.androidthanatos.ant.convert.Convert
+import pw.androidthanatos.ant.convert.DefaultConvert
+import pw.androidthanatos.ant.convert.OKHttpConvert
 import pw.androidthanatos.ant.img.AntCacheType
 import pw.androidthanatos.ant.img.ImageCallBack
 import pw.androidthanatos.ant.img.LoadImage
@@ -25,26 +29,55 @@ object Ant {
 
     private var context: Context? = null
 
+    lateinit var convert: Convert
+
+    lateinit var sslSocketFactory: SSLSocketFactory
+
+    var interceptor: AntInterceptor? = null
+
     private var debug: Boolean = false
 
-    @JvmStatic fun init(context: Context){
-        this.context = context
+    @JvmStatic fun init(context: Context,
+                        convert: Convert = DefaultConvert(),
+                        sslSocketFactory: SSLSocketFactory = DefaultSSLSocketFactory().getSSLSocketFactory(),
+                        interceptor: AntInterceptor? = null){
+       this.context = context
+       this.convert = convert
+       this.sslSocketFactory = sslSocketFactory
+       this.interceptor = interceptor
+        //判断当前项目是否已经依赖了okhttp
+       if (convert is OKHttpConvert && Class.forName("okhttp3.OkHttpClient") == null){
+           throw RuntimeException("请先添加 okhttp3.OkHttpClient")
+       }
+
+
     }
 
     @JvmStatic fun openDebug(){
         debug = true
     }
 
-    @JvmStatic fun addStringRequest(httpTask: HttpTask,responseListener: ResponseListener<String>){
+    @JvmStatic fun addStringRequest(httpTask: HttpTask, responseListener: ResponseListener<String>){
         if (context == null) throw RuntimeException("请初始化Ant")
         httpTask.setContext(context!!)
+        httpTask.addConvert(this.convert)
+        httpTask.addSSLSocketFactory(this.sslSocketFactory)
+        if (interceptor != null){
+            httpTask.addInterceptor(interceptor!!)
+        }
+
         val run =   httpTask.run(String::class.java,responseListener)
         ThreadPoolManager.creat().execute(run)
     }
 
-    @JvmStatic fun addJSONRequest(httpTask: HttpTask,responseListener: ResponseListener<JSONObject>){
+    @JvmStatic fun addJSONRequest(httpTask: HttpTask, responseListener: ResponseListener<JSONObject>){
         if (context == null) throw RuntimeException("请初始化Ant")
         httpTask.setContext(context!!)
+        httpTask.addConvert(this.convert)
+        httpTask.addSSLSocketFactory(this.sslSocketFactory)
+        if (interceptor != null){
+            httpTask.addInterceptor(interceptor!!)
+        }
         val run = httpTask.run(JSONObject::class.java,responseListener)
         ThreadPoolManager.creat().execute(run)
     }
@@ -66,14 +99,13 @@ class DataWrapper{
 
     var body: String = ""
 
-    var socketFactory: SSLSocketFactory = DefaultSSLSocketFactory().getSSLSocketFactory()
-
-    var convert: Convert? = null
-
-
-    var interceptor: AntInterceptor? = null
-
     var cache: Boolean = false
+
+    var convert: Convert = Ant.convert
+
+    var sslSocketFactory: SSLSocketFactory = DefaultSSLSocketFactory().getSSLSocketFactory()
+
+    var inteceptor: AntInterceptor? = null
 
     var _progress:(Int) ->Unit = {}
 
@@ -205,7 +237,7 @@ fun antImg(inti: ImgWrapper.() ->Unit){
 
 
 
-private fun filterWrap(task: HttpTask,wrap: DataWrapper){
+private fun filterWrap(task: HttpTask, wrap: DataWrapper){
     task.addUrl(wrap.url)
     if (wrap.cache){
         task.setCache(wrap.cache)
@@ -213,15 +245,12 @@ private fun filterWrap(task: HttpTask,wrap: DataWrapper){
     task.addMethod(wrap.method)
     task.addHeader(wrap.headers)
     task.addBody(wrap.body)
-    if (wrap.socketFactory != null){
-        task.addSSLSocketFactory(wrap.socketFactory!!)
+    task.addConvert(wrap.convert)
+    task.addSSLSocketFactory(wrap.sslSocketFactory)
+    if (wrap.inteceptor != null){
+        task.addInterceptor(wrap.inteceptor!!)
     }
-    if (wrap.convert != null){
-        task.addConvert(wrap.convert!!)
-    }
-    if (wrap.interceptor != null){
-        task.addInterceptor(wrap.interceptor!!)
-    }
+
 }
 
 

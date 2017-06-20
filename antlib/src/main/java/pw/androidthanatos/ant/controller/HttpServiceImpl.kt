@@ -108,47 +108,46 @@ class HttpServiceImpl: HttpService {
         val chain = Chain(url, method, headers, body)
         if (listener == null) throw RuntimeException("网络请求回调接口为空,请先添加网络请求回调接口")
         if (interceptor != null ){
-            if (interceptor!!.interceptor(chain)){
-                logInfo(chain)
-                if (socketFactory != null){
-                    Ant.antLog("带证书请求")
-                    val a = returnCache(cache,chain,listener!!,responseCache)
-                    if (!a){
-                        Ant.antLog("带证书网络请求")
-                        convert.httpsConvert(isNetWorkAvailable(context!!),socketFactory!!,cache,responseCache,chain,listener!!)
-                    }
-
-                }else{
-                    val a =returnCache(cache,chain,listener!!,responseCache)
-                    if(!a){
-                        convert.httpConvert(isNetWorkAvailable(context!!),cache,responseCache,chain,listener!!)
-                    }
-
+            val n_chain = interceptor!!.interceptor(chain)
+            logInfo(n_chain)
+            if (n_chain.url.startsWith("https")){
+                Ant.antLog("带证书请求")
+                val a = returnCache(cache,n_chain,listener!!,responseCache)
+                if (!a){
+                    Ant.antLog("带证书网络请求")
+                    convert.httpsConvert(isNetWorkAvailable(context!!),socketFactory!!,cache,responseCache,n_chain,listener!!)
                 }
 
             }else{
-                return
-            }
-        }
+                val a =returnCache(cache,n_chain,listener!!,responseCache)
+                if(!a){
+                    convert.httpConvert(isNetWorkAvailable(context!!),cache,responseCache,n_chain,listener!!)
+                }
 
-        logInfo(chain)
-
-        if (socketFactory != null){
-            Ant.antLog("带证书请求")
-            val a =returnCache(cache,chain,listener!!,responseCache)
-            if (!a){
-                Ant.antLog("带证书网络请求")
-                convert.httpsConvert(isNetWorkAvailable(context!!),socketFactory!!,cache,responseCache,chain,listener!!)
             }
 
         }else{
-            val a =returnCache(cache,chain,listener!!,responseCache)
-            if (!a){
-                Ant.antLog("直接网络获取")
-                convert.httpConvert(isNetWorkAvailable(context!!),cache,responseCache,chain,listener!!)
-            }
+            logInfo(chain)
 
+            if (chain.url.startsWith("https")){
+                Ant.antLog("带证书请求")
+                val a =returnCache(cache,chain,listener!!,responseCache)
+                if (!a){
+                    Ant.antLog("带证书网络请求")
+                    convert.httpsConvert(isNetWorkAvailable(context!!),socketFactory!!,cache,responseCache,chain,listener!!)
+                }
+
+            }else{
+                val a =returnCache(cache,chain,listener!!,responseCache)
+                if (!a){
+                    Ant.antLog("直接网络获取")
+                    convert.httpConvert(isNetWorkAvailable(context!!),cache,responseCache,chain,listener!!)
+                }
+
+            }
         }
+
+
     }
 
     fun returnCache(cache: Boolean,chain: Chain,listener: HttpListener,responseCache: ResponseCache): Boolean{

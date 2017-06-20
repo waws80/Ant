@@ -1,11 +1,8 @@
-package pw.androidthanatos.ant
+package pw.androidthanatos.ant.controller
 
 import android.content.Context
 import org.json.JSONObject
-import pw.androidthanatos.ant.cache.ResponseCache
-import pw.androidthanatos.ant.controller.*
 import pw.androidthanatos.ant.convert.Convert
-import pw.androidthanatos.ant.convert.DefaultConvert
 import pw.androidthanatos.ant.data.JSONListener
 import pw.androidthanatos.ant.data.StringListener
 import pw.androidthanatos.ant.img.ByteArrayListener
@@ -26,7 +23,7 @@ class HttpTask {
 
     private var socketFactory: SSLSocketFactory? = null
 
-    private var convert: Convert? = DefaultConvert()
+    private lateinit var convert: Convert
 
 
     private var interceptor: AntInterceptor? = null
@@ -69,7 +66,7 @@ class HttpTask {
     }
 
 
-    fun addInterceptor(interceptor: AntInterceptor) {
+    fun addInterceptor(interceptor: AntInterceptor?) {
         this.interceptor = interceptor
     }
 
@@ -89,7 +86,7 @@ class HttpTask {
         if (socketFactory != null){
             service.addSSLSocketFactory(socketFactory!!)
         }
-        service.addConvert(convert!!)
+        service.addConvert(convert)
         when(clazz){
             String::class.java ->service.addHttpCallBack(StringListener(callBack as ResponseListener<String>))
             JSONObject::class.java ->service.addHttpCallBack(JSONListener(callBack as ResponseListener<JSONObject>))

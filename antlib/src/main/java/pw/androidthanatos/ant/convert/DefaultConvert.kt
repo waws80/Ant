@@ -56,6 +56,10 @@ class DefaultConvert: Convert {
 
     fun get(conn: HttpURLConnection,cache: Boolean, responseCache: ResponseCache, chain: Chain, listener: HttpListener) {
         conn.setRequestProperty("Accept-Encoding", "identity")
+        //获取的是压缩数据
+        //conn.setRequestProperty("Accept-Encoding", "gzip, deflate")
+        conn.setRequestProperty("Connection", "keep-alive")
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
         chain.headers.forEach { conn.setRequestProperty(it.key,it.value) }
         val code = conn.responseCode
         if (200 == code){
@@ -68,6 +72,10 @@ class DefaultConvert: Convert {
 
     fun post(conn: HttpURLConnection,cache: Boolean, responseCache: ResponseCache, chain: Chain, listener: HttpListener) {
         conn.setRequestProperty("Accept-Encoding", "identity")
+        conn.setRequestProperty("Accept-Encoding", "identity")
+        conn.setRequestProperty("Accept-Encoding", "gzip, deflate")
+        conn.setRequestProperty("Connection", "keep-alive")
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
         chain.headers.forEach { conn.setRequestProperty(it.key,it.value) }
         if (chain.body.isNotEmpty()){
             conn.doOutput = true
