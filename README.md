@@ -61,5 +61,6 @@ antImg {
 usage：
 ```
 compile 'com.github.waws80:Ant:v1.2'
+
 ```
        
