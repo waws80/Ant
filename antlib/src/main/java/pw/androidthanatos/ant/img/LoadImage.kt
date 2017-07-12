@@ -117,7 +117,7 @@ class LoadImage {
      */
     private fun getNetImg(url: String,target: ImageView,cacheType: AntCacheType){
         val task = HttpTask()
-        if (!url.startsWith("http") || !url.startsWith("https")) throw IllegalArgumentException("请求图片的url错误")
+        if (!url.startsWith("http")) throw IllegalArgumentException("请求图片的url错误")
         task.addUrl(url)
         task.setContext(target.context)
         task.addConvert(Ant.convert)
