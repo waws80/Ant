@@ -29,35 +29,36 @@ Ant网络访问框架的由来是因为每次写项目的时候都要引入第�
 ## 用法
 
 ###获取网络数据
-· `antString { 
+```
+antString { 
             url = "https://www.baidu.com"
             /*methdo header body  ...*/
             complateString { 
                 s -> log(s)
             }
-       } `
+       } 
+```
 ### 获取网络图片
-· `antImg {
-            url = "https:////www.baidu.com/img/bd_logo1.png"
-            //imageview
-            target = iv1
-            progress {
-                p -> pb1.text = if (p == -1) "100%" else "$p%"
-            }
-            complate {
-                toast("iv1 下载完成")
-                pb1.visibility= View.GONE
-            }
-        }` 
-        
-        ``
+```
+antImg {
+        url = "https:////www.baidu.com/img/bd_logo1.png"
+        //imageview
+        target = iv1
+        progress {
+            p -> pb1.text = if (p == -1) "100%" else "$p%"
+        }
+        complate {
+            toast("iv1 下载完成")
+            pb1.visibility= View.GONE
+        }
+    }
+```
 ####欢迎大家多提意见
 老司机你的源码：
 <https://github.com/waws80/Ant/>  欢迎大家多star谢谢🙏 
 
-usage
-        ：
-        ```
-        compile 'com.github.waws80:Ant:v1.0'
-        ```
+usage：
+```
+compile 'com.github.waws80:Ant:v1.0'
+```
        
