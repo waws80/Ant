@@ -31,7 +31,7 @@ object Ant {
 
     lateinit var convert: Convert
 
-    lateinit var sslSocketFactory: SSLSocketFactory
+    var sslSocketFactory: SSLSocketFactory? = null
 
     var interceptor: AntInterceptor? = null
 
@@ -39,7 +39,7 @@ object Ant {
 
     @JvmStatic fun init(context: Context,
                         convert: Convert = DefaultConvert(),
-                        sslSocketFactory: SSLSocketFactory = DefaultSSLSocketFactory().getSSLSocketFactory(),
+                        sslSocketFactory: SSLSocketFactory? = DefaultSSLSocketFactory().getSSLSocketFactory(),
                         interceptor: AntInterceptor? = null){
        this.context = context
        this.convert = convert
@@ -61,7 +61,7 @@ object Ant {
         if (context == null) throw RuntimeException("请初始化Ant")
         httpTask.setContext(context!!)
         httpTask.addConvert(this.convert)
-        httpTask.addSSLSocketFactory(this.sslSocketFactory)
+        if (this.sslSocketFactory != null)httpTask.addSSLSocketFactory(this.sslSocketFactory)
         if (interceptor != null){
             httpTask.addInterceptor(interceptor!!)
         }

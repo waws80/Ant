@@ -102,7 +102,7 @@ class HttpServiceImpl: HttpService {
     override fun execute() {
         if (context == null) throw  RuntimeException("请初始化Ant")
         val responseCache = ResponseCache(context!!)
-        if (!url.startsWith("http") || !url.startsWith("https")){
+        if (!url.trim().startsWith("http")){
             throw IllegalArgumentException("请求的url错误")
         }
         val chain = Chain(url, method, headers, body)

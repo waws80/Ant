@@ -61,7 +61,7 @@ class HttpTask {
     }
 
 
-    fun addSSLSocketFactory(socketFactory: SSLSocketFactory) {
+    fun addSSLSocketFactory(socketFactory: SSLSocketFactory?) {
         this.socketFactory = socketFactory
     }
 
