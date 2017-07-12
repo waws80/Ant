@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/waws80/Ant.svg)](https://jitpack.io/#waws80/Ant)
 # 	<center>Ant网络请求框架
 
 ## 由来：
